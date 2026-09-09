@@ -45,6 +45,15 @@ jobs:
           test -s ChroniclesOfTheAbyss-test.apk
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose ChroniclesOfTheAbyss-test.apk
 
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChroniclesOfTheAbyss-Test
+          path: |
+            ChroniclesOfTheAbyss-test.apk
+            ChroniclesOfTheAbyss-test.apk.sha256
+          if-no-files-found: error
+
       - name: Check release signing secrets
         id: signing
         env:
@@ -87,13 +96,12 @@ jobs:
           $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose ChroniclesOfTheAbyss.apk
           sha256sum ChroniclesOfTheAbyss.apk > ChroniclesOfTheAbyss.apk.sha256
 
-      - name: Upload APK artifacts
+      - name: Upload signed release APK
+        if: steps.signing.outputs.available == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ChroniclesOfTheAbyss-APK
+          name: ChroniclesOfTheAbyss-Release
           path: |
-            ChroniclesOfTheAbyss-test.apk
-            ChroniclesOfTheAbyss-test.apk.sha256
             ChroniclesOfTheAbyss.apk
             ChroniclesOfTheAbyss.apk.sha256
           if-no-files-found: error
