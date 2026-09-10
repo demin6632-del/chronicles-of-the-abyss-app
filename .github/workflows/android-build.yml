@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Android project
         uses: actions/checkout@v4
@@ -54,18 +53,14 @@ jobs:
         run: |
           test -s app/build/outputs/apk/debug/app-debug.apk
           ls -lh app/build/outputs/apk/debug/app-debug.apk
-          cp app/build/outputs/apk/debug/app-debug.apk ChroniclesOfTheAbyss-test.apk
-          sha256sum ChroniclesOfTheAbyss-test.apk > ChroniclesOfTheAbyss-test.apk.sha256
           BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort -V | tail -1)
-          "$ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner" verify --verbose ChroniclesOfTheAbyss-test.apk
+          "$ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner" verify --verbose app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload installable debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: ChroniclesOfTheAbyss-Test
-          path: |
-            ChroniclesOfTheAbyss-test.apk
-            ChroniclesOfTheAbyss-test.apk.sha256
+          name: ChroniclesOfTheAbyss-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Create Android project archive
