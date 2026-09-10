@@ -39,9 +39,9 @@ jobs:
 
       - name: Prepare HTML game asset
         run: |
-          test -s game-source/game.html
+          test -s game-source/game_tower_source.html
           mkdir -p app/src/main/assets
-          cp game-source/game.html app/src/main/assets/game.html
+          cp game-source/game_tower_source.html app/src/main/assets/game.html
 
       - name: Build debug APK
         run: ./gradlew --no-daemon :app:assembleDebug
