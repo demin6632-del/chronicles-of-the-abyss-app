@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Android project
         uses: actions/checkout@v4
 
-      - name: Checkout correct tower game source
+      - name: Checkout current game source
         uses: actions/checkout@v4
         with:
           repository: demin6632-del/chronicles-of-the-abyss
@@ -39,11 +39,11 @@ jobs:
           gradle wrapper --gradle-version 8.7
           chmod +x gradlew
 
-      - name: Prepare correct game asset
+      - name: Prepare current game asset
         run: |
-          test -s game-source/game_tower_source.html
+          test -s game-source/game.html
           mkdir -p app/src/main/assets
-          cp game-source/game_tower_source.html app/src/main/assets/game.html
+          cp game-source/game.html app/src/main/assets/game.html
           wc -c app/src/main/assets/game.html
 
       - name: Build debug APK
