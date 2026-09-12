@@ -8,45 +8,34 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Android project
         uses: actions/checkout@v4
-
       - name: Checkout game source
         uses: actions/checkout@v4
         with:
           repository: demin6632-del/chronicles-of-the-abyss
           ref: main
           path: game-source
-
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
-
       - name: Prepare game
         run: |
           mkdir -p app/src/main/assets
-          cp game-source/game_tower_source.html app/src/main/assets/game.html
-
+          if [ -f game-source/game.html ]; then cp game-source/game.html app/src/main/assets/game.html; elif [ -f game-source/game_tower_source.html ]; then cp game-source/game_tower_source.html app/src/main/assets/game.html; else cp game-source/index.html app/src/main/assets/game.html; fi
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
-
-      - name: Prepare APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk ChroniclesOfTheAbyss-test.apk
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ChroniclesOfTheAbyss-Test
-          path: ChroniclesOfTheAbyss-test.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
